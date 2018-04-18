@@ -32,6 +32,8 @@ body {
 h1 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+    padding-bottom: 25px;
+    padding-top: 40px
 }
 
 
@@ -99,15 +101,16 @@ h1 {
 
 .score-panel {
     text-align: center;
-    width: 345px;
+    width: 660px;
     margin-bottom: 10px;
 }
 
 .score-panel .stars {
     margin: 0;
-    padding: 0;
+    /* padding: 0; */
     display: inline-block;
     margin: 0 5px 0 0;
+    font-size: 19px;
 }
 
 .score-panel .stars li {
@@ -116,8 +119,9 @@ h1 {
 }
 
 .score-panel .restart {
-    float: right;
+    /* float: right; */
     cursor: pointer;
+    font-size: 19px;
 }
 
 #successImage {
@@ -127,13 +131,55 @@ h1 {
     padding-bottom: 15px;
 }
 
+#TryingNumber {
+    color: #bd458c;
+}
+
+#closeBtn {
+    float: right;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+#congratulationImg {
+    height: 30px;
+    width: auto;
+}
+
+.fontStyle {
+    font-family: cursive;
+    font-size: medium;
+}
+
 @media (max-width: 442px) {
     .deck {
-        width: 290px;
+        width: 300px;
         height: auto;
     }
     .deck .card {
         height: 60px;
         width: 50px;
     }
+    .score-panel {
+        width: 300px;
+        height: auto;
+    }
+    .score-panel .stars {
+        font-size: 12px;
+    }
+    #timer {
+        font-size: 14px;
+    }
+    .score-panel .restart {
+        font-size: 12px;
+    }
+    #TryingNumber {
+        font-size: 13px;
+    }
+    #subject {
+        font-size: 1.6rem;
+    }
+    /* .modal-dialog {
+        width: 90%;
+    } */
 }

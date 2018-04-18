@@ -8,6 +8,10 @@ var cardTagIds = [];
 var number_Of_Card_Matching = 0;
 var number_Of_Card_Moving = 0;
 var number_Of_Star_Rating = 0;
+var second = 0;
+var minute = 0;
+var interval;
+var hasGameStarted = false; // use this variable to determine the starting time
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -26,7 +30,6 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 /*
@@ -39,8 +42,10 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
 function generateBord() {
-    //Clear the board, variables  and  arrays to start a new game .
+    //Reset the board, variables  and  arrays to start a new game .
+    let timer = document.getElementById("timer");
     let parent = document.getElementById("main");
     let memoryBord = document.createElement("div");
     memoryBord.setAttribute("id", "memoryBord");
@@ -50,7 +55,6 @@ function generateBord() {
     memoryBord.style.boxShadow = "12px 15px 20px 0 rgba(46, 61, 73, 0.5)";
     document.getElementById("subject").style.display = "flex";
     document.getElementById("score").style.display = "flex";
-    //let star = document.getElementsByTagName("li");
     let star = document.getElementById("ratingStars");
     //add the stars(li) to (ul)
     for (i = 0; i < 3; i++) {
@@ -61,23 +65,31 @@ function generateBord() {
     number_Of_Card_Matching = 0;
     number_Of_Card_Moving = 0;
     number_Of_Star_Rating = 0;
-    document.getElementById("TryingNumber").innerHTML = number_Of_Card_Moving;
-    // document.getElementById("starRating").innerHTML = number_Of_Star_Rating;
+    document.getElementById("TryingNumber").innerHTML = "Movings Card Number: " + number_Of_Card_Moving;
+    //reset timer 
+    second = 0;
+    minute = 0;
+    timer.innerHTML = "0 mins 0 secs";
+    clearInterval(interval);
+    hasGameStarted = false;
+    //reset gamer time
+    gamertime = 0;
+    // shuffling cards 
     shuffle(memoryCard);
+    //Adding the cards to the board after shuffling cards
     addCardsToMemoryBoard(memoryCard)
 }
 //add Event to load the bord when the page is loading 
 window.addEventListener("load", generateBord);
+
 //////////////////////////////add Cards To Memory Board Function////////////////////////////////
 function addCardsToMemoryBoard(memoryCard) {
     for (let i = 0; i < memoryCard.length; i++) {
-
         document.getElementById('memoryBord').innerHTML += '<section id="' + i + '" class="col-auto card fa fa-' + memoryCard[i] + '" onclick="checkMemeoryCardMatch(' + i + ',\'' + memoryCard[i] + '\')"></section>'
     }
 }
 //////////////////////////////////////// Move Card Counter and rating Function //////////////////////////////////
 function moveCardCounter() {
-    //increment the counter of card moving by 1
     number_Of_Card_Moving++;
     document.getElementById("TryingNumber").innerHTML = number_Of_Card_Moving + " Moves";
     let star = document.getElementsByTagName("li");
@@ -105,29 +117,16 @@ function moveCardCounter() {
         }
     }
 }
-///////////////////finction to remove the congratulation part/////////////////////
-function removeCongratsElements() {
-    let parent = document.getElementById("main");
-    let child1 = document.getElementById("successImage");
-    let child2 = document.getElementById("ratingText");
-    let child3 = document.getElementById("resetBtn");
-    if (child1 !== null && child2 !== null && child3 !== null) {
-        parent.removeChild(child1);
-        parent.removeChild(child2);
-        parent.removeChild(child3);
-    }
-    //clear the star rating element
-    document.getElementById("ratingStars").innerHTML = null;
-    // generate a new board
-    generateBord();
-}
+
 ///////////////////////function to check for meomry cards///////////////////////
 function checkMemeoryCardMatch(cardTagId, value) {
     if (cardValue.length == 0) {
         cardValue.push(value);
         cardTagIds.push(cardTagId);
+        hasGameStarted = true;
+        clearInterval(interval);
+        startTimer();
         document.getElementById(cardTagIds[0]).className = "open show card fa fa-" + value + "";
-        moveCardCounter();
     } else if (cardValue.length == 1) {
         cardValue.push(value);
         cardTagIds.push(cardTagId);
@@ -143,20 +142,12 @@ function checkMemeoryCardMatch(cardTagId, value) {
         cardValue = [];
     }
 }
-/////////////Generte a new board "function" for "play again" button//////////////
+/////////////Generte a new board refersh part //////////////
 function reset() {
     let parent = document.getElementById("main");
     let child = document.getElementById("memoryBord");
     parent.removeChild(child);
-    //   let starParent = document.getElementById("ratingStars");
     document.getElementById("ratingStars").innerHTML = null;
-
-    // for (let i = 0; i < starParent.length; i++) {
-    //     starParent.removeChild(starParent[i])
-    // }
-    // star[i].classList.add("fa-star-o");
-    // star[i].style.visibility = "collapse";
-
     generateBord();
 }
 /////////Card Matching Function//////////////
@@ -173,21 +164,13 @@ function cardMatching(cardIds) {
         let star = document.getElementsByTagName("li");
         for (let i = 0; i < 3; i++) {
             let starColor = star[i];
-            if (starColor.style.color === "rgb(255, 108, 0)") {
+            if (starColor.style.color == "rgb(255, 108, 0)") {
                 number_Of_Star_Rating++;
             }
         }
         setTimeout(function() {
-            document.getElementById("subject").style.display = "none";
-            document.getElementById("score").style.display = "none";
-            let parent = document.getElementById("main");
-            let child = document.getElementById("memoryBord");
-            parent.removeChild(child);
-            document.getElementById("ratingStars").innerHTML = null;
-            document.getElementById('main').innerHTML += '<div class="row" id="successImage"><section class="col"><img src="img/well.jpg" alt="success" id="successImage"></section></div>' +
-                '<div class="row" id="ratingText"><section class="col"> <h5 id="subject_id" >Congratulations! You won!</h5><p id="subject_id" class="text-uppercase">with  ' + number_Of_Card_Moving + '  Moves and ' + number_Of_Star_Rating + ' star </p> <p id="subject_id" class="text-uppercase text_color">Woooow!</p></section></div>' +
-                '<div class="row" id="resetBtn"><section class="col"> <input type = "button" class="btn btn-success" id="restartbtn"  value="Play again!" onclick="removeCongratsElements()"/></section></div>'
-        }, 500);
+            congratulation();
+        }, 100);
     }
 }
 /////////No Matching Between 2 Cards function//////////
@@ -195,12 +178,54 @@ function cardUnMatching(cardIds) {
     document.getElementById(cardIds[0]).classList.remove("show", "open");
     document.getElementById(cardIds[0]).classList.add("no_match");
     document.getElementById(cardIds[1]).classList.add("no_match");
-    let s1 = cardIds[0];
-    let s2 = cardIds[1];
+    let card1 = cardIds[0];
+    let card2 = cardIds[1];
     cardTagIds = [];
     cardValue = [];
     setTimeout(function() {
-        document.getElementById(s1).classList.remove("no_match");
-        document.getElementById(s2).classList.remove("no_match");
+        document.getElementById(card1).classList.remove("no_match");
+        document.getElementById(card2).classList.remove("no_match");
     }, 500);
 }
+
+//////////Function to start the timer of game ////////////////
+function startTimer() {
+    interval = setInterval(function() {
+        let timer = document.getElementById("timer");
+        if (hasGameStarted == true) {
+            timer.innerHTML = minute + "mins " + second + "secs";
+            second++;
+            if (second == 60) {
+                minute++;
+                second = 0;
+            }
+        }
+    }, 1000);
+}
+//////////show congratulations modal function//////////
+function congratulation() {
+    let memoryMode = document.getElementById("memoryMode");
+    memoryMode.style.display = 'block';
+    memoryMode.classList.add('show');
+    clearInterval(interval);
+    //Get the time,star rating and the number of moving and display them on the model
+    let gamerTime = 0;
+    gamerTime = document.getElementById("timer").innerHTML;
+    document.getElementById("gamerTime").innerHTML = "Your Time : " + gamerTime;
+    document.getElementById("noOfMoving").innerHTML = "Number of moving : " + number_Of_Card_Moving;
+    document.getElementById("starRating").innerHTML = "Your Rating is : " + number_Of_Star_Rating + "  star";
+    //the background color of the page becomes dark .
+    $("#memoryMode").modal({ backdrop: "static" });
+}
+// for player to play Again 
+// this function applied in tow case :
+//1 . when the user press play again button on Model
+//2 . when the user press close button on the model 
+function playAgain() {
+    //reset the background color of the page  .
+    $("#memoryMode").modal({ backdrop: false });
+    //The model will be hidden
+    memoryMode.style.display = 'none';
+    reset();
+}
+///////////////////////////////
