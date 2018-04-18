@@ -228,4 +228,4 @@ function playAgain() {
     memoryMode.style.display = 'none';
     reset();
 }
-///////////////////////////////
+////////////////////////////////
