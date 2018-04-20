@@ -66,7 +66,6 @@ function generateBord() {
     number_Of_Card_Matching = 0;
     number_Of_Card_Moving = 0;
     number_Of_Star_Rating = 0;
-    //// number_Of_Unmatched_Cards = 0;
     startingCardMoving = 0
     document.getElementById("TryingNumber").innerHTML = "Movings Card Number: " + number_Of_Card_Moving;
     //reset timer 
@@ -134,11 +133,6 @@ function moveCardCounter() {
     }
 
 }
-////Numer Of unmatching cards///////
-// function move_Unmatched_Cardcounter() {
-//     number_Of_Unmatched_Cards++;
-//     document.getElementById("TryingNumber").innerHTML = number_Of_Unmatched_Cards + " Moves";
-// }
 
 ///////////////////////function to check for meomry cards///////////////////////
 function checkMemeoryCardMatch(cardTagId, value) {
