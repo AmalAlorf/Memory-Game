@@ -12,6 +12,7 @@ var second = 0;
 var minute = 0;
 var interval;
 var hasGameStarted = false; // use this variable to determine the starting time
+var startingCardMoving = 0;
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -65,6 +66,8 @@ function generateBord() {
     number_Of_Card_Matching = 0;
     number_Of_Card_Moving = 0;
     number_Of_Star_Rating = 0;
+    //// number_Of_Unmatched_Cards = 0;
+    startingCardMoving = 0
     document.getElementById("TryingNumber").innerHTML = "Movings Card Number: " + number_Of_Card_Moving;
     //reset timer 
     second = 0;
@@ -86,6 +89,14 @@ window.addEventListener("load", generateBord);
 function addCardsToMemoryBoard(memoryCard) {
     for (let i = 0; i < memoryCard.length; i++) {
         document.getElementById('memoryBord').innerHTML += '<section id="' + i + '" class="col-auto card fa fa-' + memoryCard[i] + '" onclick="checkMemeoryCardMatch(' + i + ',\'' + memoryCard[i] + '\')"></section>'
+    }
+}
+////////////////////////Function to  start the time/////
+function startingCardMovingCounter() {
+    startingCardMoving++;
+    if (startingCardMoving == 1) {
+        startingCardMoving++;
+        startTimer();
     }
 }
 //////////////////////////////////////// Move Card Counter and rating Function //////////////////////////////////
@@ -115,8 +126,19 @@ function moveCardCounter() {
                 star[i].style.color = "#ff6c00";
             }
         }
+    } else {
+        for (let i = 0; i < 3; i++) {
+            star[i].className = "card fa fa-star";
+            star[i].style.color = "#ff6c00";
+        }
     }
+
 }
+////Numer Of unmatching cards///////
+// function move_Unmatched_Cardcounter() {
+//     number_Of_Unmatched_Cards++;
+//     document.getElementById("TryingNumber").innerHTML = number_Of_Unmatched_Cards + " Moves";
+// }
 
 ///////////////////////function to check for meomry cards///////////////////////
 function checkMemeoryCardMatch(cardTagId, value) {
@@ -124,18 +146,18 @@ function checkMemeoryCardMatch(cardTagId, value) {
         cardValue.push(value);
         cardTagIds.push(cardTagId);
         hasGameStarted = true;
-        clearInterval(interval);
-        startTimer();
-        document.getElementById(cardTagIds[0]).className = "open show card fa fa-" + value + "";
+        startingCardMovingCounter();
+        document.getElementById(cardTagIds[0]).className = "open disabled show card fa fa-" + value + "";
     } else if (cardValue.length == 1) {
         cardValue.push(value);
         cardTagIds.push(cardTagId);
-        moveCardCounter();
+        document.getElementById(cardTagIds[1]).className = "disabled card fa fa-" + value + "";
         //check if the two cards are identicals
         if (cardValue[0] == cardValue[1]) {
             cardMatching(cardTagIds);
         } else {
             cardUnMatching(cardTagIds);
+            moveCardCounter();
         }
     } else { //if lenght more than 1
         cardTagIds = [];
@@ -182,25 +204,28 @@ function cardUnMatching(cardIds) {
     let card2 = cardIds[1];
     cardTagIds = [];
     cardValue = [];
-    setTimeout(function() {
-        document.getElementById(card1).classList.remove("no_match");
-        document.getElementById(card2).classList.remove("no_match");
-    }, 500);
-}
 
+    setTimeout(function() {
+
+        document.getElementById(card1).classList.remove("disabled", "no_match");
+        document.getElementById(card2).classList.remove("disabled", "no_match");
+    }, 700);
+}
 //////////Function to start the timer of game ////////////////
 function startTimer() {
-    interval = setInterval(function() {
-        let timer = document.getElementById("timer");
-        if (hasGameStarted == true) {
+    let timer = document.getElementById("timer");
+    if (hasGameStarted == true) {
+        interval = setInterval(function() {
             timer.innerHTML = minute + "mins " + second + "secs";
             second++;
+
             if (second == 60) {
                 minute++;
                 second = 0;
             }
-        }
-    }, 1000);
+        }, 1000);
+
+    }
 }
 //////////show congratulations modal function//////////
 function congratulation() {
@@ -228,4 +253,5 @@ function playAgain() {
     memoryMode.style.display = 'none';
     reset();
 }
+
 ///////////////////////////////

@@ -151,6 +151,10 @@ h1 {
     font-size: medium;
 }
 
+.disabled {
+    pointer-events: none;
+}
+
 @media (max-width: 442px) {
     .deck {
         width: 300px;
