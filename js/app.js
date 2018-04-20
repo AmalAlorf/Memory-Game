@@ -133,7 +133,6 @@ function moveCardCounter() {
     }
 
 }
-
 ///////////////////////function to check for meomry cards///////////////////////
 function checkMemeoryCardMatch(cardTagId, value) {
     if (cardValue.length == 0) {
